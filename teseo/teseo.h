@@ -91,13 +91,13 @@ public:
     /*!
       \param strings std::vector<qtd::string> reference will get the individual strings.  
       \param s constant std::string reference string to be parsed.  
-      \param count uint reference gets count of strings parsed.  
+      \param count unsigned int reference gets count of strings parsed.  
       \param command nmea_rr const reference used to validate the status line.  
       \returns  bool true if valid reply 
 
       split a big Teseo reply in its individual strings. The separator is "\r\n"
     */
-    static bool parse_multiline_reply(std::vector<std::string> & strings, const std::string s, uint& count, const nmea_rr& command) ;
+    static bool parse_multiline_reply(std::vector<std::string> & strings, const std::string s, unsigned int& count, const nmea_rr& command) ;
 
     //! write command to the Teseo
     /*!
@@ -131,12 +131,12 @@ public:
     /*!
       \param command const nmea_rr reference holds the NMEA command.   
       \param strings std::vector<std::string> reference gets the replies. 
-      \param count uint reference count of strings parsed.  
+      \param count unsigned int reference count of strings parsed.  
       \returns  bool true if valid reply 
 
       Send NMEA request that expects more than 1 reply to the Teseo. Validate and Return the repies.
     */    
-    bool ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings, uint& count);
+    bool ask_nmea_multiple(const nmea_rr& command, std::vector<std::string>& strings, unsigned int& count);
 
     //! get GLL request to the Teseo and read reply
     /*!
@@ -150,22 +150,22 @@ public:
     //! get GSV request to the Teseo and read reply
     /*!
       \param strings std::vector<std::string> reference gets the reply. 
-      \param count int reference gets count of replies. 
+      \param count unsigned int reference gets count of replies. 
       \returns boold true if validated.
 
       Send request for GSV data to the Teseo. Retrieve the replies.
     */    
-    bool ask_gsv(std::vector<std::string>& strings, uint& count);
+    bool ask_gsv(std::vector<std::string>& strings, unsigned int& count);
 
     //! get GSA request to the Teseo and read reply
     /*!
       \param strings std::vector<std::string> reference gets the reply. 
-      \param count int reference gets count of replies. 
+      \param count unsigned int reference gets count of replies. 
       \returns boold true if validated.
 
       Send request for GSA data to the Teseo. Retrieve the replies.
     */    
-    bool ask_gsa(std::vector<std::string>& strings, uint& count);
+    bool ask_gsa(std::vector<std::string>& strings, unsigned int& count);
 
     //! get RMC request to the Teseo and read reply
     /*!
