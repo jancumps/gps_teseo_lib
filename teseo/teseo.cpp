@@ -2,12 +2,12 @@
 #include <cassert>
 namespace teseo {
 
-nmea_rr teseo::gll("$PSTMNMEAREQUEST,100000,0\n\r", "$PSTMNMEAREQUEST,100000,0");
-nmea_rr teseo::gsv("$PSTMNMEAREQUEST,80000,0\n\r", "$PSTMNMEAREQUEST,80000,0");
-nmea_rr teseo::gsa("$PSTMNMEAREQUEST,4,0\n\r", "$PSTMNMEAREQUEST,4,0");
-nmea_rr teseo::gga("$PSTMNMEAREQUEST,2,0\n\r", "$PSTMNMEAREQUEST,2,0");
-nmea_rr teseo::rmc("$PSTMNMEAREQUEST,40,0\n\r", "$PSTMNMEAREQUEST,40,0");
-nmea_rr teseo::vtg("$PSTMNMEAREQUEST,10,0\n\r", "$PSTMNMEAREQUEST,10,0");
+nmea_rr teseo::gll("$PSTMNMEAREQUEST,100000,0\n\r", "GLL,");
+nmea_rr teseo::gsv("$PSTMNMEAREQUEST,80000,0\n\r", "GSV,");
+nmea_rr teseo::gsa("$PSTMNMEAREQUEST,4,0\n\r", "GSA,");
+nmea_rr teseo::gga("$PSTMNMEAREQUEST,2,0\n\r", "GGA,");
+nmea_rr teseo::rmc("$PSTMNMEAREQUEST,40,0\n\r", "RMC,");
+nmea_rr teseo::vtg("$PSTMNMEAREQUEST,10,0\n\r", "VTG,");
 
 /*
 when the teseo is preset for i2c according to AN5203,
@@ -76,15 +76,20 @@ bool teseo::parse_multiline_reply(std::vector<std::string> & strings, const std:
         if (new_string_index == std::string::npos) {// exhausted. This should be the status string
 #ifdef __GNUC__ // this requires a recent version of GCC.
 #if __GNUC_PREREQ(10,0)
-            valid = s.substr(string_index, s.length() - string_index).starts_with(command.second);
+            valid = s.substr(string_index, s.length() - string_index).starts_with(command.first.substr(0, command.first.length()-2));
 #else
-            valid = (s.substr(string_index, s.length() - string_index).find(command.second)) != std::string::npos;
+            valid = (s.substr(string_index, s.length() - string_index).find((command.first.substr(0, command.first.length()-2)))) != std::string::npos;
 #endif
 #endif
             break;
         }
         assert(vector_index < maxelements);
         strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
+        valid = strings[vector_index].substr(3, 4).starts_with(command.second);
+        if (!valid) {
+            vector_index = 0;
+            break;
+        }
         string_index = new_string_index + 2; // skip the separator
     }
     count = vector_index; // report the number of retrieved data lines.
