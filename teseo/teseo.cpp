@@ -85,7 +85,7 @@ bool teseo::parse_multiline_reply(std::vector<std::string> & strings, const std:
         }
         assert(vector_index < maxelements);
         strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
-        valid = strings[vector_index].substr(3, 4).starts_with(command.second);
+        valid = strings[vector_index].length() >= 7 && strings[vector_index].substr(3, 4).starts_with(command.second);
         if (!valid) {
             vector_index = 0;
             break;
