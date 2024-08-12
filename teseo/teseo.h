@@ -5,7 +5,6 @@
 #include "callbackmanager.h"
 // std::pair
 #include <utility> 
-#include <array>
 #include <cassert>
 
 namespace teseo {
