@@ -58,6 +58,46 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
     while(((s.length()) && s.find("$PSTMGPSRESTART") == std::string::npos)); // command successful
 }
 
+bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::string s, unsigned int& count, const nmea_rr& command) {
+        std::size_t maxelements = strings.size(); // at this moment, don't support growing the array (embedded)
+        std::size_t string_index = 0;
+        std::size_t vector_index; // intentionally uninitialised
+        std::string substring;
+        bool valid = false;
+
+        // TODO: current implementation will reply false if there are more answers than strings.size()
+        // it stores all valid replies up to that point. the remaining ones are discarded.
+        // In the future, I may add a parameter with the max count (default = 0: use strings.size()) 
+        // and rely on the user to provide a container that's big enough for that max count (can assert that)
+    
+        for(vector_index = 0; vector_index < maxelements; vector_index++) {
+            std::size_t new_string_index = s.find("\r\n", string_index);
+            if (new_string_index == std::string::npos) {// exhausted. This should be the status string
+#ifdef __GNUC__ // this requires a recent version of GCC.
+#if __GNUC_PREREQ(10,0)
+                valid = s.substr(string_index, s.length() - string_index).starts_with(command.first.substr(0, command.first.length()-2));
+#else
+                valid = (s.substr(string_index, s.length() - string_index).find((command.first.substr(0, command.first.length()-2)))) != std::string::npos;
+#endif
+#endif
+                break;
+            }
+            assert(vector_index < maxelements);
+            strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
+            valid = strings[vector_index].length() >= 7 && strings[vector_index].substr(3, 4).starts_with(command.second);
+            if (!valid) {
+                vector_index = 0;
+                break;
+            }
+            string_index = new_string_index + 2; // skip the separator
+        }
+        count = vector_index; // report the number of retrieved data lines.
+        std::for_each(strings.begin() + count, strings.end(), [](auto &discard) { 
+            discard = std::string(); });
+        return valid;
+    }
+
+
 void teseo::write(const std::string& s) {
     assert(writer.armed());
     writer.call(s);
@@ -78,10 +118,26 @@ bool teseo::ask_nmea(const nmea_rr& command, std::string& s) {
     return retval;
 }
 
+bool teseo::ask_nmea_multiple(const nmea_rr& command, std::span<std::string> strings, unsigned int& count) {
+    unsigned int retval; // intentionally not initialised
+    std::string s;
+    write(command.first);
+    read(s);
+    retval = parse_multiline_reply(strings, s, count, command);
+    return retval;
+}
+
 bool teseo::ask_gll(std::string& s) {
     return ask_nmea(gll, s);
 }
 
+bool teseo::ask_gsv(std::span<std::string> strings, unsigned int& count) {
+    return ask_nmea_multiple(gsv, strings, count);
+}
+
+bool teseo::ask_gsa(std::span<std::string> strings, unsigned int& count) {
+    return ask_nmea_multiple(gsa, strings, count);
+}
 bool teseo::ask_gga(std::string& s) {
     return ask_nmea(gga, s);
 }
