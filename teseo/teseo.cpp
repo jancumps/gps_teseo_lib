@@ -72,7 +72,8 @@ bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::str
     
         for(vector_index = 0; vector_index < maxelements; vector_index++) {
             std::size_t new_string_index = s.find("\r\n", string_index);
-            if (new_string_index == std::string::npos) {// exhausted. This should be the status string
+//            if (new_string_index == std::string::npos) {// exhausted. This should be the status string
+            if (new_string_index == s.length() - 2) {// exhausted. This should be the status string
 #ifdef __GNUC__ // this requires a recent version of GCC.
 #if __GNUC_PREREQ(10,0)
                 valid = s.substr(string_index, s.length() - string_index).starts_with(command.first.substr(0, command.first.length()-2));
