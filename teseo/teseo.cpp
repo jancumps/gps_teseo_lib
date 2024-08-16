@@ -1,12 +1,12 @@
 #include "teseo.h"
 namespace teseo {
 
-nmea_rr teseo::gll("$PSTMNMEAREQUEST,100000,0\n\r", "GLL,");
-nmea_rr teseo::gsv("$PSTMNMEAREQUEST,80000,0\n\r", "GSV,");
-nmea_rr teseo::gsa("$PSTMNMEAREQUEST,4,0\n\r", "GSA,");
-nmea_rr teseo::gga("$PSTMNMEAREQUEST,2,0\n\r", "GGA,");
-nmea_rr teseo::rmc("$PSTMNMEAREQUEST,40,0\n\r", "RMC,");
-nmea_rr teseo::vtg("$PSTMNMEAREQUEST,10,0\n\r", "VTG,");
+nmea_rr teseo::gll("$PSTMNMEAREQUEST,100000,0\r\n", "GLL,");
+nmea_rr teseo::gsv("$PSTMNMEAREQUEST,80000,0\r\n", "GSV,");
+nmea_rr teseo::gsa("$PSTMNMEAREQUEST,4,0\r\n", "GSA,");
+nmea_rr teseo::gga("$PSTMNMEAREQUEST,2,0\r\n", "GGA,");
+nmea_rr teseo::rmc("$PSTMNMEAREQUEST,40,0\r\n", "RMC,");
+nmea_rr teseo::vtg("$PSTMNMEAREQUEST,10,0\r\n", "VTG,");
 
 /*
 when the teseo is preset for i2c according to AN5203,
@@ -23,34 +23,34 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
     resetter.call();
 
     // stop the engine
-    write("$PSTMGPSSUSPEND\n\r");
+    write("$PSTMGPSSUSPEND\r\n");
     // do {
     //     read(s);            
     // }
     // while((s.find("$PSTMGPSSUSPENDED*") == std::string::npos)); // command successful
 
     // reset the UART message list
-    write("$PSTMCFGMSGL,0,1,0,0\n\r");
+    write("$PSTMCFGMSGL,0,1,0,0\r\n");
     // do {
     //     read(s);            
     // }
     // while((s.find("$PSTMCFGMSGLOK*") == std::string::npos)); // command successful
 
     // reset the I2C message list
-    write("$PSTMCFGMSGL,3,1,0,0\n\r");
+    write("$PSTMCFGMSGL,3,1,0,0\r\n");
     // do {
     //     read(s);            
     // }
     // while((s.find("$PSTMCFGMSGLOK*") == std::string::npos)); // command successful
 
     // disable the eco-ing message
-    write("$PSTMSETPAR,1227,1,2\n\r");
+    write("$PSTMSETPAR,1227,1,2\r\n");
     // do {
     //     read(s);            
     // }
     // while((s.find("$PSTMSETPAROK") == std::string::npos)); // command successful 
 
-    write("$PSTMGPSRESTART\n\r");
+    write("$PSTMGPSRESTART\r\n");
     do {
         read(s);            
     }
