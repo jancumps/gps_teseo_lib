@@ -19,84 +19,53 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
     assert(resetter.armed());
 
     std::string s;
-
     resetter.call();
 
     // stop the engine
     write("$PSTMGPSSUSPEND\r\n");
-    // do {
-    //     read(s);            
-    // }
-    // while((s.find("$PSTMGPSSUSPENDED*") == std::string::npos)); // command successful
 
     // reset the UART message list
     write("$PSTMCFGMSGL,0,1,0,0\r\n");
-    // do {
-    //     read(s);            
-    // }
-    // while((s.find("$PSTMCFGMSGLOK*") == std::string::npos)); // command successful
-
     // reset the I2C message list
     write("$PSTMCFGMSGL,3,1,0,0\r\n");
-    // do {
-    //     read(s);            
-    // }
-    // while((s.find("$PSTMCFGMSGLOK*") == std::string::npos)); // command successful
-
     // disable the eco-ing message
     write("$PSTMSETPAR,1227,1,2\r\n");
-    // do {
-    //     read(s);            
-    // }
-    // while((s.find("$PSTMSETPAROK") == std::string::npos)); // command successful 
 
+    // restart the engine
     write("$PSTMGPSRESTART\r\n");
     do {
         read(s);            
     }
-    // TODO validate if I2C is OK with checking for empty
     while(((s.length()) && s.find("$PSTMGPSRESTART") == std::string::npos)); // command successful
 }
 
 bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::string s, unsigned int& count, const nmea_rr& command) {
-        std::size_t maxelements = strings.size(); // at this moment, don't support growing the array (embedded)
-        std::size_t string_index = 0;
-        std::size_t new_string_index; // intentionally uninitialised
-        std::size_t vector_index; // intentionally uninitialised
-        bool valid = false;
+    std::size_t message_count = strings.size();
+    std::size_t string_index = 0;
+    std::size_t new_string_index; // intentionally uninitialised
+    std::size_t vector_index; // intentionally uninitialised
+    bool valid = false;
 
-        // TODO: current implementation will reply false if there are more answers than strings.size()
-        // it stores all valid replies up to that point. the remaining ones are discarded.
-        // In the future, I may add a parameter with the max count (default = 0: use strings.size()) 
-        // and rely on the user to provide a container that's big enough for that max count (can assert that)
-    
-        for(vector_index = 0; vector_index < maxelements; vector_index++) {
-            new_string_index = s.find("\r\n", string_index);
-            if (new_string_index == s.length() - 2) {// exhausted. This should be the status string
-#ifdef __GNUC__ // this requires a recent version of GCC.
-#if __GNUC_PREREQ(10,0)
-                valid = s.substr(string_index, s.length() - string_index).starts_with(command.first.substr(0, command.first.length()-2));
-#else
-                valid = (s.substr(string_index, s.length() - string_index).find((command.first.substr(0, command.first.length()-2)))) != std::string::npos;
-#endif
-#endif
-                break;
-            }
-            assert(vector_index < maxelements);
-            strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
-            valid = strings[vector_index].length() >= 7 && strings[vector_index].substr(3, 4).starts_with(command.second);
-            if (!valid) {
-                vector_index = 0;
-                break;
-            }
-            string_index = new_string_index + 2; // skip the separator
+    for(vector_index = 0; vector_index < message_count; vector_index++) {
+        new_string_index = s.find("\r\n", string_index);
+        if (new_string_index == s.length() - 2) {  // exhausted. This should be the status string
+            valid = s.substr(string_index, s.length() - string_index).starts_with(command.first.substr(0, command.first.length()-2));
+            break;
         }
-        count = vector_index; // report the number of retrieved data lines.
-        std::for_each(strings.begin() + count, strings.end(), [](auto &discard) { 
-            discard = std::string(); });
-        return valid;
+        assert(vector_index < message_count);
+        strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
+        valid = strings[vector_index].length() >= 7 && strings[vector_index].substr(3, 4).starts_with(command.second);
+        if (!valid) {
+            vector_index = 0;
+            break;
+        }
+        string_index = new_string_index + 2; // skip the separator
     }
-
+    count = vector_index; // report the number of retrieved data lines.
+    std::for_each(strings.begin() + count, strings.end(),
+        [](auto &discard) { discard = std::string(); }); // clean out unused positions
+    return valid;
+}
 
 void teseo::write(const std::string& s) {
     assert(writer.armed());
