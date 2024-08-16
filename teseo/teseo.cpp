@@ -61,8 +61,8 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
 bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::string s, unsigned int& count, const nmea_rr& command) {
         std::size_t maxelements = strings.size(); // at this moment, don't support growing the array (embedded)
         std::size_t string_index = 0;
+        std::size_t new_string_index; // intentionally uninitialised
         std::size_t vector_index; // intentionally uninitialised
-        std::string substring;
         bool valid = false;
 
         // TODO: current implementation will reply false if there are more answers than strings.size()
@@ -71,8 +71,7 @@ bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::str
         // and rely on the user to provide a container that's big enough for that max count (can assert that)
     
         for(vector_index = 0; vector_index < maxelements; vector_index++) {
-            std::size_t new_string_index = s.find("\r\n", string_index);
-//            if (new_string_index == std::string::npos) {// exhausted. This should be the status string
+            new_string_index = s.find("\r\n", string_index);
             if (new_string_index == s.length() - 2) {// exhausted. This should be the status string
 #ifdef __GNUC__ // this requires a recent version of GCC.
 #if __GNUC_PREREQ(10,0)
