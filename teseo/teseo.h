@@ -59,7 +59,7 @@ public:
     /*!
       The developer has to register the logic for reading from the device.  
       Callback parameter: std::string reference where the data returned by the Teseo will be stored.  
-      For instructions on how to register your handler, check the documentation of getWriteCallback().
+      For instructions on how to register your handler, check the documentation of writer().
     */
     inline Callback<void, std::string&>& reader() {
         return reader_;
@@ -70,7 +70,7 @@ public:
       The developer has to register the logic that resets the device. It is optional. See the init() documentation.  
       The handler has to pull reset low then high. Then it needs to wait 4 seconds to allow the Teseo to boot.  
       Callback parameter: none.  
-      For instructions on how to register your handler, check the documentation of getWriteCallback().
+      For instructions on how to register your handler, check the documentation of writer().
     */
     inline Callback<void>& resetter() {
         return resetter_;
