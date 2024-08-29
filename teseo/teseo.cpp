@@ -1,12 +1,12 @@
 #include "teseo.h"
 namespace teseo {
 
-nmea_rr teseo::gll("$PSTMNMEAREQUEST,100000,0\r\n", "GLL,");
-nmea_rr teseo::gsv("$PSTMNMEAREQUEST,80000,0\r\n", "GSV,");
-nmea_rr teseo::gsa("$PSTMNMEAREQUEST,4,0\r\n", "GSA,");
-nmea_rr teseo::gga("$PSTMNMEAREQUEST,2,0\r\n", "GGA,");
-nmea_rr teseo::rmc("$PSTMNMEAREQUEST,40,0\r\n", "RMC,");
-nmea_rr teseo::vtg("$PSTMNMEAREQUEST,10,0\r\n", "VTG,");
+nmea_rr teseo::gll_("$PSTMNMEAREQUEST,100000,0\r\n", "GLL,");
+nmea_rr teseo::gsv_("$PSTMNMEAREQUEST,80000,0\r\n", "GSV,");
+nmea_rr teseo::gsa_("$PSTMNMEAREQUEST,4,0\r\n", "GSA,");
+nmea_rr teseo::gga_("$PSTMNMEAREQUEST,2,0\r\n", "GGA,");
+nmea_rr teseo::rmc_("$PSTMNMEAREQUEST,40,0\r\n", "RMC,");
+nmea_rr teseo::vtg_("$PSTMNMEAREQUEST,10,0\r\n", "VTG,");
 
 /*
 when the teseo is preset for i2c according to AN5203,
@@ -14,12 +14,12 @@ init is not required, and you can cut 4s 10ms from the startup sequence
 https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioning-sensor--stmicroelectronics.pdf
 */
  void teseo::init() {
-    assert(writer.armed());
-    assert(reader.armed());
-    assert(resetter.armed());
+    assert(writer_.armed());
+    assert(reader_.armed());
+    assert(resetter_.armed());
 
     std::string s;
-    resetter.call();
+    resetter_.call();
 
     // stop the engine
     write("$PSTMGPSSUSPEND\r\n");
@@ -68,13 +68,13 @@ bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::str
 }
 
 void teseo::write(const std::string& s) {
-    assert(writer.armed());
-    writer.call(s);
+    assert(writer_.armed());
+    writer_.call(s);
 }
 
 void teseo::read(std::string& s) {
-    assert(reader.armed());
-    reader.call(s);
+    assert(reader_.armed());
+    reader_.call(s);
 }
 
 bool teseo::ask_nmea(const nmea_rr& command, std::string& s) {
@@ -82,8 +82,8 @@ bool teseo::ask_nmea(const nmea_rr& command, std::string& s) {
     unsigned int count;
     write(command.first);
     read(s);
-    retval = parse_multiline_reply(single_line_parser, s, count, command);
-    s = single_line_parser[0];    
+    retval = parse_multiline_reply(single_line_parser_, s, count, command);
+    s = single_line_parser_[0];    
     return retval;
 }
 
@@ -97,26 +97,26 @@ bool teseo::ask_nmea_multiple(const nmea_rr& command, std::span<std::string> str
 }
 
 bool teseo::ask_gll(std::string& s) {
-    return ask_nmea(gll, s);
+    return ask_nmea(gll_, s);
 }
 
 bool teseo::ask_gsv(std::span<std::string> strings, unsigned int& count) {
-    return ask_nmea_multiple(gsv, strings, count);
+    return ask_nmea_multiple(gsv_, strings, count);
 }
 
 bool teseo::ask_gsa(std::span<std::string> strings, unsigned int& count) {
-    return ask_nmea_multiple(gsa, strings, count);
+    return ask_nmea_multiple(gsa_, strings, count);
 }
 bool teseo::ask_gga(std::string& s) {
-    return ask_nmea(gga, s);
+    return ask_nmea(gga_, s);
 }
 
 bool teseo::ask_rmc(std::string& s) {
-    return ask_nmea(rmc, s);
+    return ask_nmea(rmc_, s);
 }
 
 bool teseo::ask_vtg(std::string& s) {
-    return ask_nmea(vtg, s);
+    return ask_nmea(vtg_, s);
 }
 
 } // namespace teseo

@@ -20,14 +20,14 @@ template <typename R, typename... Args>
 
 class Callback {
 public:
-	Callback() : _callback(nullptr){}
+	Callback() : callback_(nullptr){}
 
 	inline void set(std::function<R(Args... args)> callback) {
-	    _callback = & callback;
+	    callback_ = & callback;
 	}
 
 	inline void unset() {
-	    _callback = nullptr;
+	    callback_ = nullptr;
 	}
 
 	/*
@@ -35,26 +35,26 @@ public:
 	 */
 	inline R call(Args... args) {
 		if constexpr (std::is_void<R>::value) {
-			if (_callback == nullptr) {
+			if (callback_ == nullptr) {
 				return;
 			}
-			(*_callback)(args...);
+			(*callback_)(args...);
 		}
 
 		if constexpr (! std::is_void<R>::value) {
-			if (_callback == nullptr) {
+			if (callback_ == nullptr) {
 				return 0; // R can only be a arithmetic type. 0 should work as default.
 			}
-			return (*_callback)(args...);
+			return (*callback_)(args...);
 		}
 	}
 
 	inline bool armed() {
-		return (_callback != nullptr);		
+		return (callback_ != nullptr);		
 	}
 
 private:
-	std::function<R(Args... args)> *_callback;
+	std::function<R(Args... args)> *callback_;
 };
 
 

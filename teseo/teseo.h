@@ -28,7 +28,7 @@ class teseo {
 public:
 
     //! constructor.
-    teseo() : single_line_parser() {}
+    teseo() : single_line_parser_() {}
 
     //! expose the callback manager for writing to Teseo.
     /*!
@@ -46,13 +46,13 @@ public:
 
       teseo::teseo gps;
       // register that write() function as the handler for writing to the Teseo.
-      gps.getWriteCallback().set([](const std::string& s) -> void {
+      gps.writer().set([](const std::string& s) -> void {
         write(s);
       });
       @endcode
     */
-    inline Callback<void, const std::string&>& getWriteCallback() {
-        return writer;
+    inline Callback<void, const std::string&>& writer() {
+        return writer_;
     }
 
     //! expose the callback manager for reading from Teseo
@@ -61,8 +61,8 @@ public:
       Callback parameter: std::string reference where the data returned by the Teseo will be stored.  
       For instructions on how to register your handler, check the documentation of getWriteCallback().
     */
-    inline Callback<void, std::string&>& getReadCallback() {
-        return reader;
+    inline Callback<void, std::string&>& reader() {
+        return reader_;
     }
 
     //! expose the callback manager for resetting the Teseo
@@ -72,8 +72,8 @@ public:
       Callback parameter: none.  
       For instructions on how to register your handler, check the documentation of getWriteCallback().
     */
-    inline Callback<void>& getResetCallback() {
-        return resetter;
+    inline Callback<void>& resetter() {
+        return resetter_;
     }
 
     //! configure the Teseo for use as a position sensor (optional).
@@ -198,25 +198,25 @@ public:
 private:
 
     //! command to retrieve GLL data
-    static nmea_rr gll;
+    static nmea_rr gll_;
     //! command to retrieve GSV data
-    static nmea_rr gsv;
+    static nmea_rr gsv_;
     //! command to retrieve GSA data
-    static nmea_rr gsa;
+    static nmea_rr gsa_;
     //! command to retrieve GGA data
-    static nmea_rr gga;
+    static nmea_rr gga_;
     //! command to retrieve RMC data
-    static nmea_rr rmc;
+    static nmea_rr rmc_;
     //! command to retrieve VTG data
-    static nmea_rr vtg;
+    static nmea_rr vtg_;
     //! callback manager for writing to the Teseo
-    Callback<void, const std::string&> writer;
+    Callback<void, const std::string&> writer_;
     //! callback manager for reading from the Teseo
-    Callback<void, std::string&> reader;
+    Callback<void, std::string&> reader_;
     //! callback manager for resetting the Teseo
-    Callback<void> resetter;
+    Callback<void> resetter_;
     //! every single line NMEA command has two lines. reply and status
-    std::array<std::string,2> single_line_parser;
+    std::array<std::string,2> single_line_parser_;
 
 };
 
