@@ -13,10 +13,10 @@ when the teseo is preset for i2c according to AN5203,
 init is not required, and you can cut 4s 10ms from the startup sequence
 https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioning-sensor--stmicroelectronics.pdf
 */
- void teseo::init() {
-    assert(writer_.armed());
-    assert(reader_.armed());
-    assert(resetter_.armed());
+ void teseo::initialize() {
+    assert(writer_.is_set());
+    assert(reader_.is_set());
+    assert(resetter_.is_set());
 
     std::string s;
     resetter_.call();
@@ -68,12 +68,12 @@ bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::str
 }
 
 void teseo::write(const std::string& s) {
-    assert(writer_.armed());
+    assert(writer_.is_set());
     writer_.call(s);
 }
 
 void teseo::read(std::string& s) {
-    assert(reader_.armed());
+    assert(reader_.is_set());
     reader_.call(s);
 }
 

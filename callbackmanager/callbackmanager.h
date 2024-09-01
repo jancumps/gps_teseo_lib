@@ -49,7 +49,7 @@ public:
 		}
 	}
 
-	inline bool armed() {
+	inline bool is_set() {
 		return (callback_ != nullptr);		
 	}
 

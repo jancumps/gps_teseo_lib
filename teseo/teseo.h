@@ -86,7 +86,7 @@ public:
     https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioning-sensor--stmicroelectronics.pdf  
     In that case, the developer doesn't need to provide a resetter callback handler.
     */
-    void init();
+    void initialize();
 
     //! utility to parse a multiline Teseo reply into separate strings
     /*!
