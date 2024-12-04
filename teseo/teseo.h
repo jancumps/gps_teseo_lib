@@ -13,7 +13,7 @@ namespace teseo {
 /**
  * A std::pair to hold a NMEA command and its reply signature validation string
 */
-typedef const std::pair<const std::string, const std::string> nmea_rr;
+using nmea_rr = const std::pair<const std::string, const std::string>;
 
 //! Driver class for ST Teseo IC.
 /*!
