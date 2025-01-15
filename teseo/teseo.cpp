@@ -1,4 +1,7 @@
 #include "teseo.h"
+
+#include<algorithm>
+
 namespace teseo {
 
 nmea_rr teseo::gll_("$PSTMNMEAREQUEST,100000,0\r\n", "GLL,");
