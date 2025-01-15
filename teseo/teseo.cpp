@@ -1,5 +1,7 @@
 #include "teseo.h"
-namespace teseo {
+namespace teseo { 
+
+#include<algorithm>
 
 nmea_rr teseo::gll_("$PSTMNMEAREQUEST,100000,0\r\n", "GLL,");
 nmea_rr teseo::gsv_("$PSTMNMEAREQUEST,80000,0\r\n", "GSV,");
