@@ -1,14 +1,16 @@
-#ifndef TESEO_H_
-#define TESEO_H_
+module;
 
 #include <string>
-#include "callbackmanager.h"
 // std::pair
 #include <utility> 
-#include <cassert>
 #include <span>
 
-namespace teseo {
+export module teseo;
+
+
+import callbackmanager;
+
+export namespace teseo {
 
 /**
  * A std::pair to hold a NMEA command and its reply signature validation string
@@ -51,7 +53,7 @@ public:
       });
       @endcode
     */
-    inline Callback<void, const std::string&>& writer() {
+    inline callbackmanager::Callback<void, const std::string&>& writer() {
         return writer_;
     }
 
@@ -61,7 +63,7 @@ public:
       Callback parameter: std::string reference where the data returned by the Teseo will be stored.  
       For instructions on how to register your handler, check the documentation of writer().
     */
-    inline Callback<void, std::string&>& reader() {
+    inline callbackmanager::Callback<void, std::string&>& reader() {
         return reader_;
     }
 
@@ -72,7 +74,7 @@ public:
       Callback parameter: none.  
       For instructions on how to register your handler, check the documentation of writer().
     */
-    inline Callback<void>& resetter() {
+    inline callbackmanager::Callback<void>& resetter() {
         return resetter_;
     }
 
@@ -210,17 +212,15 @@ private:
     //! command to retrieve VTG data
     static nmea_rr vtg_;
     //! callback manager for writing to the Teseo
-    Callback<void, const std::string&> writer_;
+    callbackmanager::Callback<void, const std::string&> writer_;
     //! callback manager for reading from the Teseo
-    Callback<void, std::string&> reader_;
+    callbackmanager::Callback<void, std::string&> reader_;
     //! callback manager for resetting the Teseo
-    Callback<void> resetter_;
+    callbackmanager::Callback<void> resetter_;
     //! every single line NMEA command has two lines. reply and status
     std::array<std::string,2> single_line_parser_;
 
 };
 
 } // namespace teseo
-
-#endif // TESEO_H_
 

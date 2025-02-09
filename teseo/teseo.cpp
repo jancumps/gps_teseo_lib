@@ -1,7 +1,13 @@
-#include "teseo.h"
 #include<algorithm>
+#include <cassert>
+#include <string>
+// std::pair
+#include <utility> 
+#include <span>
 
-namespace teseo { 
+import teseo;
+
+namespace teseo {
 
 nmea_rr teseo::gll_("$PSTMNMEAREQUEST,100000,0\r\n", "GLL,");
 nmea_rr teseo::gsv_("$PSTMNMEAREQUEST,80000,0\r\n", "GSV,");
