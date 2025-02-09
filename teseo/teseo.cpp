@@ -1,6 +1,11 @@
-#include "teseo.h"
-
 #include<algorithm>
+#include <cassert>
+#include <string>
+// std::pair
+#include <utility> 
+#include <span>
+
+import teseo;
 
 namespace teseo {
 
