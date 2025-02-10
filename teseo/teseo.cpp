@@ -1,3 +1,5 @@
+module;
+
 #include<algorithm>
 #include <cassert>
 #include <string>
@@ -5,7 +7,7 @@
 #include <utility> 
 #include <span>
 
-import teseo;
+module teseo;
 
 namespace teseo {
 

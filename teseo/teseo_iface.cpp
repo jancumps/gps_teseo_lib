@@ -7,7 +7,6 @@ module;
 
 export module teseo;
 
-
 import callbackmanager;
 
 export namespace teseo {
