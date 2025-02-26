@@ -12,4 +12,26 @@ goals:
 2: [Dynamic GPS configuration (and some other things) ](https://community.element14.com/technologies/embedded/b/blog/posts/c-library-for-st-teseo-gps---pt-2-dynamic-gps-configuration-and-some-other-things)  
 
 
-Requires a toolchain that supports C++ modules. Tested with CMake 3.26 and GCC 14.2.1
+Requires a toolchain that supports C++ modules. Tested with CMake 3.26 and GCC 14.2.1  
+
+depends on module [callbackmanager ](https://github.com/jancumps/callbackmanager)  
+
+cmake example:
+
+```
+set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmodules-ts")
+
+add_executable(${CMAKE_PROJECT_NAME})
+target_sources(${CMAKE_PROJECT_NAME}
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/teseo/teseo.cpp
+)
+target_sources(${CMAKE_PROJECT_NAME}
+        PUBLIC
+        FILE_SET cxx_modules TYPE CXX_MODULES FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/callbackmanager.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/teseo/teseo_iface.cpp
+)
+```
