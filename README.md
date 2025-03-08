@@ -3,7 +3,7 @@
 C++ driver for the ST Teseo-LIV3 GPS module.
 
 [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
-![GitHub License](https://img.shields.io/github/license/jancumps/pico_gps_teseo?label=licence)
+![GitHub License](https://img.shields.io/github/license/jancumps/gps_teseo_lib?label=licence)
 [![run unit tests](https://github.com/jancumps/gps_teseo_lib/actions/workflows/test.yml/badge.svg)](https://github.com/jancumps/gps_teseo_lib/actions/workflows/test.yml)
 
 
