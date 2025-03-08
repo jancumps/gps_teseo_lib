@@ -24,6 +24,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
         with:
+          path: gps_teseo_lib
           submodules: false
 
       - name: Install dependencies
