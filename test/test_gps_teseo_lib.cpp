@@ -57,6 +57,6 @@ TEST_F(teseoTest, callbacksSet) {
 
 TEST_F(teseoTest, callbacksExecute) {
     EXPECT_FALSE(is_reset_called);
-    o.resetter().call();
+    o.resetter()();
     EXPECT_TRUE(is_reset_called);
 }

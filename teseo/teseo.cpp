@@ -29,7 +29,7 @@ https://www.st.com/resource/en/application_note/an5203-teseoliv3f--i2c-positioni
     assert(resetter_.is_set());
 
     std::string s;
-    resetter_.call();
+    resetter_();
 
     // stop the engine
     write("$PSTMGPSSUSPEND\r\n");
@@ -79,12 +79,12 @@ bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::str
 
 void teseo::write(const std::string& s) {
     assert(writer_.is_set());
-    writer_.call(s);
+    writer_(s);
 }
 
 void teseo::read(std::string& s) {
     assert(reader_.is_set());
-    reader_.call(s);
+    reader_(s);
 }
 
 bool teseo::ask_nmea(const nmea_rr& command, std::string& s) {
