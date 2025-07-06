@@ -59,12 +59,12 @@ bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::str
     for(vector_index = 0; vector_index < message_count; vector_index++) {
         new_string_index = s.find("\r\n", string_index);
         if (new_string_index == s.length() - 2) {  // exhausted. This should be the status string
-            valid = s.substr(string_index, s.length() - string_index).starts_with(command.first.substr(0, command.first.length()-2));
+            valid = s.substr(string_index, s.length() - string_index).starts_with(command.command.substr(0, command.command.length()-2));
             break;
         }
         assert(vector_index < message_count);
         strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
-        valid = strings[vector_index].length() >= 7 && strings[vector_index].substr(3, 4).starts_with(command.second);
+        valid = strings[vector_index].length() >= 7 && strings[vector_index].substr(3, 4).starts_with(command.signature);
         if (!valid) {
             vector_index = 0;
             break;
@@ -90,7 +90,7 @@ void teseo::read(std::string& s) {
 bool teseo::ask_nmea(const nmea_rr& command, std::string& s) {
     bool retval; // intentionally not initialised
     unsigned int count;
-    write(command.first);
+    write(command.command);
     read(s);
     retval = parse_multiline_reply(single_line_parser_, s, count, command);
     s = single_line_parser_[0];    
@@ -100,7 +100,7 @@ bool teseo::ask_nmea(const nmea_rr& command, std::string& s) {
 bool teseo::ask_nmea_multiple(const nmea_rr& command, std::span<std::string> strings, unsigned int& count) {
     unsigned int retval; // intentionally not initialised
     std::string s;
-    write(command.first);
+    write(command.command);
     read(s);
     retval = parse_multiline_reply(strings, s, count, command);
     return retval;

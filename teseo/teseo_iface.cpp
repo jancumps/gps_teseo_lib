@@ -11,10 +11,13 @@ import callbackmanager;
 
 export namespace teseo {
 
-/**
- * A std::pair to hold a NMEA command and its reply signature validation string
-*/
-using nmea_rr = const std::pair<const std::string, const std::string>;
+//! Struct holds combinations of NMEA commands and their reply signature validation string
+struct nmea_rr {
+  const std::string command;
+  const std::string signature;
+  nmea_rr(const std::string& command, const std::string& signature) : 
+    command(command), signature(signature) {}
+};
 
 //! Driver class for ST Teseo IC.
 /*!
