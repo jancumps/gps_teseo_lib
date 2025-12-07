@@ -3,7 +3,6 @@ module;
 #include<algorithm>
 #include <cassert>
 #include <string>
-// std::pair
 #include <utility> 
 #include <span>
 
@@ -53,25 +52,25 @@ bool teseo::parse_multiline_reply(std::span<std::string> strings, const std::str
     std::size_t message_count = strings.size();
     std::size_t string_index = 0;
     std::size_t new_string_index; // intentionally uninitialised
-    std::size_t vector_index; // intentionally uninitialised
+    std::size_t span_index; // intentionally uninitialised
     bool valid = false;
 
-    for(vector_index = 0; vector_index < message_count; vector_index++) {
+    for(span_index = 0; span_index < message_count; span_index++) {
         new_string_index = s.find("\r\n", string_index);
         if (new_string_index == s.length() - 2) {  // exhausted. This should be the status string
             valid = s.substr(string_index, s.length() - string_index).starts_with(command.command.substr(0, command.command.length()-2));
             break;
         }
-        assert(vector_index < message_count);
-        strings[vector_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
-        valid = strings[vector_index].length() >= 7 && strings[vector_index].substr(3, 4).starts_with(command.signature);
+        assert(span_index < message_count);
+        strings[span_index] = s.substr(string_index, (new_string_index + 2) - string_index); // include the separator
+        valid = strings[span_index].length() >= 7 && strings[span_index].substr(3, 4).starts_with(command.signature);
         if (!valid) {
-            vector_index = 0;
+            span_index = 0;
             break;
         }
         string_index = new_string_index + 2; // skip the separator
     }
-    count = vector_index; // report the number of retrieved data lines.
+    count = span_index; // report the number of retrieved data lines.
     std::for_each(strings.begin() + count, strings.end(),
         [](auto &discard) { discard = std::string(); }); // clean out unused positions
     return valid;
