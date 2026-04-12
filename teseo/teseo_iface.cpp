@@ -201,17 +201,17 @@ public:
 private:
 
     //! command to retrieve GLL data
-    static nmea_rr gll_;
+    const static nmea_rr gll_;
     //! command to retrieve GSV data
-    static nmea_rr gsv_;
+    const static nmea_rr gsv_;
     //! command to retrieve GSA data
-    static nmea_rr gsa_;
+    const static nmea_rr gsa_;
     //! command to retrieve GGA data
-    static nmea_rr gga_;
+    const static nmea_rr gga_;
     //! command to retrieve RMC data
-    static nmea_rr rmc_;
+    const static nmea_rr rmc_;
     //! command to retrieve VTG data
-    static nmea_rr vtg_;
+    const static nmea_rr vtg_;
     //! callback manager for writing to the Teseo
     callbackmanager::Callback<void, const std::string&> writer_;
     //! callback manager for reading from the Teseo
