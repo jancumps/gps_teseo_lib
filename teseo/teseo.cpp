@@ -10,12 +10,12 @@ module teseo;
 
 namespace teseo {
 
-nmea_rr teseo::gll_("$PSTMNMEAREQUEST,100000,0\r\n", "GLL,");
-nmea_rr teseo::gsv_("$PSTMNMEAREQUEST,80000,0\r\n", "GSV,");
-nmea_rr teseo::gsa_("$PSTMNMEAREQUEST,4,0\r\n", "GSA,");
-nmea_rr teseo::gga_("$PSTMNMEAREQUEST,2,0\r\n", "GGA,");
-nmea_rr teseo::rmc_("$PSTMNMEAREQUEST,40,0\r\n", "RMC,");
-nmea_rr teseo::vtg_("$PSTMNMEAREQUEST,10,0\r\n", "VTG,");
+const nmea_rr teseo::gll_("$PSTMNMEAREQUEST,100000,0\r\n", "GLL,");
+const nmea_rr teseo::gsv_("$PSTMNMEAREQUEST,80000,0\r\n", "GSV,");
+const nmea_rr teseo::gsa_("$PSTMNMEAREQUEST,4,0\r\n", "GSA,");
+const nmea_rr teseo::gga_("$PSTMNMEAREQUEST,2,0\r\n", "GGA,");
+const nmea_rr teseo::rmc_("$PSTMNMEAREQUEST,40,0\r\n", "RMC,");
+const nmea_rr teseo::vtg_("$PSTMNMEAREQUEST,10,0\r\n", "VTG,");
 
 /*
 when the teseo is preset for i2c according to AN5203,
